@@ -1,4 +1,4 @@
-package com.domain.restful.model.response;
+package com.domain.restful.handler.types.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

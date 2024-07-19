@@ -1,4 +1,4 @@
-package com.domain.restful.controller;
+package com.domain.restful.handler.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

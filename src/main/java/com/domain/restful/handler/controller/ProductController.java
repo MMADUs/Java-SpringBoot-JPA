@@ -1,10 +1,10 @@
-package com.domain.restful.controller;
+package com.domain.restful.handler.controller;
 
-import com.domain.restful.model.dto.ProductDTO;
+import com.domain.restful.handler.types.request.ProductRequest;
+import com.domain.restful.handler.types.response.ApiResponse;
 import com.domain.restful.model.entity.ProductEntity;
-import com.domain.restful.model.response.ApiResponse;
-import com.domain.restful.service.ProductService;
-import com.domain.restful.model.request.ProductRequest;
+import com.domain.restful.model.mapper.ProductMapper;
+import com.domain.restful.usecase.service.ProductService;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -24,7 +24,7 @@ public class ProductController {
   private ProductService productService;
 
   @Autowired
-  private ProductDTO productDTO;
+  private ProductMapper productMapper;
 
   @GetMapping
   public ResponseEntity<ApiResponse<List<ProductEntity>>> getAllProducts() {
@@ -45,7 +45,7 @@ public class ProductController {
 
   @PostMapping
   public ResponseEntity<ApiResponse<ProductEntity>> createProduct(@Valid @RequestBody ProductRequest product) {
-    ProductEntity productRequest = productDTO.ProductToEntity(product);
+    ProductEntity productRequest = productMapper.requestToEntity(product);
     ProductEntity createdProduct = productService.createProduct(productRequest);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(new ApiResponse<>("Product created successfully", createdProduct, true));

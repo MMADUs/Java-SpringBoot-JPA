@@ -1,10 +1,11 @@
 package com.domain.restful.config;
 
-import com.domain.restful.interceptor.LogInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import com.domain.restful.handler.interceptor.LogInterceptor;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {

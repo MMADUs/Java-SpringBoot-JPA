@@ -1,4 +1,4 @@
-package com.domain.restful.interceptor;
+package com.domain.restful.handler.interceptor;
 
 import org.springframework.web.servlet.ModelAndView;
 

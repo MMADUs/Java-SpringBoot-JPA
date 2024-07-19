@@ -1,4 +1,4 @@
-package com.domain.restful.service;
+package com.domain.restful.usecase.service;
 
 import com.domain.restful.model.entity.ProductEntity;
 import com.domain.restful.model.repository.ProductRepository;

@@ -1,4 +1,4 @@
-package com.domain.restful.model.request;
+package com.domain.restful.handler.types.request;
 
 import java.math.BigDecimal;
 import jakarta.validation.constraints.*;
