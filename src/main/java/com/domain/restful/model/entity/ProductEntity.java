@@ -13,6 +13,7 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "product")
@@ -41,5 +42,6 @@ public class ProductEntity {
 
   @ManyToOne
   @JoinColumn(name = "category_id")
+  @JsonBackReference
   private CategoryEntity category;
 }
