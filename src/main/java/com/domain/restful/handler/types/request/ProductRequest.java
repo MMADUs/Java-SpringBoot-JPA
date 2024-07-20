@@ -31,4 +31,9 @@ public class ProductRequest {
 
   @NotNull(message = "Availability is required")
   private Boolean available;
+
+  @NotNull(message = "Category Id is required")
+  @Min(value = 0, message = "Category Id cannot be negative")
+  @Max(value = 999, message = "Category Id is too high")
+  private Long category_id;
 }

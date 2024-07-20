@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/product")
+@RequestMapping("/product")
 public class ProductController {
 
   @Autowired
@@ -46,6 +46,7 @@ public class ProductController {
   @PostMapping
   public ResponseEntity<ApiResponse<ProductEntity>> createProduct(@Valid @RequestBody ProductRequest product) {
     ProductEntity productRequest = productMapper.requestToEntity(product);
+    System.out.println(productRequest);
     ProductEntity createdProduct = productService.createProduct(productRequest);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(new ApiResponse<>("Product created successfully", createdProduct, true));

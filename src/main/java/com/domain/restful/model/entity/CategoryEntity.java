@@ -29,18 +29,4 @@ public class CategoryEntity {
 
   @Column(nullable = false)
   private String name;
-
-  @OneToMany(mappedBy = "category", cascade = CascadeType.ALL, orphanRemoval = true)
-  @Builder.Default
-  private List<ProductEntity> products = new ArrayList<>();
-
-  public void addProduct(ProductEntity product) {
-    products.add(product);
-    product.setCategory(this);
-  }
-
-  public void removeProduct(ProductEntity product) {
-    products.remove(product);
-    product.setCategory(null);
-  }
 }
