@@ -36,4 +36,9 @@ public class ProductRequest {
   @Min(value = 0, message = "Category Id cannot be negative")
   @Max(value = 999, message = "Category Id is too high")
   private Long category_id;
+
+  @NotNull(message = "Merchant Id is required")
+  @Min(value = 0, message = "Merchant Id cannot be negative")
+  @Max(value = 999, message = "Merchant Id is too high")
+  private Long merchant_id;
 }

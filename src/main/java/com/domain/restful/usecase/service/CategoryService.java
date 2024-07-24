@@ -17,35 +17,35 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class CategoryService {
 
-  @Autowired
-  private CategoryRepository categoryRepository;
+    @Autowired
+    private CategoryRepository categoryRepository;
 
-  public List<CategoryEntity> getAllCategory() {
-    return categoryRepository.findAll();
-  }
-
-  public CategoryEntity getCategoryById(Long id) {
-    return categoryRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
-  }
-
-  public CategoryEntity createCategory(CategoryEntity category) {
-    return categoryRepository.save(category);
-  }
-
-  public CategoryEntity updateCategory(Long id, CategoryEntity categoryDetails) {
-    CategoryEntity category = categoryRepository.findById(id)
-        .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
-    
-    category.setName(categoryDetails.getName());
-
-    return categoryRepository.save(category);
-  }
-
-  public void deleteCategory(Long id) {
-    if (!categoryRepository.existsById(id)) {
-      throw new EntityNotFoundException("Cannot delete. Category not found with id: " + id);
+    public List<CategoryEntity> getAllCategory() {
+        return categoryRepository.findAll();
     }
-    categoryRepository.deleteById(id);
-  }
+
+    public CategoryEntity getCategoryById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+    }
+
+    public CategoryEntity createCategory(CategoryEntity category) {
+        return categoryRepository.save(category);
+    }
+
+    public CategoryEntity updateCategory(Long id, CategoryEntity categoryDetails) {
+        CategoryEntity category = categoryRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Category not found with id: " + id));
+
+        category.setName(categoryDetails.getName());
+
+        return categoryRepository.save(category);
+    }
+
+    public void deleteCategory(Long id) {
+        if (!categoryRepository.existsById(id)) {
+            throw new EntityNotFoundException("Cannot delete. Category not found with id: " + id);
+        }
+        categoryRepository.deleteById(id);
+    }
 }

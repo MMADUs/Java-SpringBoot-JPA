@@ -1,6 +1,10 @@
 package com.domain.restful.usecase.service;
 
+import com.domain.restful.model.entity.CategoryEntity;
+import com.domain.restful.model.entity.MerchantEntity;
 import com.domain.restful.model.entity.ProductEntity;
+import com.domain.restful.model.repository.CategoryRepository;
+import com.domain.restful.model.repository.MerchantRepository;
 import com.domain.restful.model.repository.ProductRepository;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -18,6 +22,12 @@ public class ProductService {
   @Autowired
   private ProductRepository productRepository;
 
+  @Autowired
+  private CategoryRepository categoryRepository;
+
+  @Autowired
+  private MerchantRepository merchantRepository;
+
   public List<ProductEntity> getAllProducts() {
     return productRepository.findAll();
   }
@@ -28,6 +38,9 @@ public class ProductService {
   }
 
   public ProductEntity createProduct(ProductEntity product) {
+    MerchantEntity merchant = product.getMerchant();
+    merchant.addProduct(product);
+
     return productRepository.save(product);
   }
 
@@ -40,6 +53,12 @@ public class ProductService {
     product.setPrice(productDetails.getPrice());
     product.setStock(productDetails.getStock());
     product.setAvailable(productDetails.getAvailable());
+
+    CategoryEntity categoryEntity = categoryRepository.findById(productDetails.getCategory().getId()).orElse(null);
+    product.setCategory(categoryEntity);
+
+    MerchantEntity merchantEntity = merchantRepository.findById(productDetails.getMerchant().getId()).orElse(null);
+    product.setMerchant(merchantEntity);
 
     return productRepository.save(product);
   }

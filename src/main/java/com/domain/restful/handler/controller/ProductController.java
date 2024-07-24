@@ -29,6 +29,7 @@ public class ProductController {
   @GetMapping
   public ResponseEntity<ApiResponse<List<ProductEntity>>> getAllProducts() {
     List<ProductEntity> products = productService.getAllProducts();
+    System.out.println(products);
     return ResponseEntity.ok(new ApiResponse<>("Products retrieved successfully", products, true));
   }
 
@@ -46,15 +47,15 @@ public class ProductController {
   @PostMapping
   public ResponseEntity<ApiResponse<ProductEntity>> createProduct(@Valid @RequestBody ProductRequest product) {
     ProductEntity productRequest = productMapper.requestToEntity(product);
-    System.out.println(productRequest);
     ProductEntity createdProduct = productService.createProduct(productRequest);
     return ResponseEntity.status(HttpStatus.CREATED)
         .body(new ApiResponse<>("Product created successfully", createdProduct, true));
   }
 
   @PutMapping("/{id}")
-  public ResponseEntity<ApiResponse<ProductEntity>> updateProduct(@PathVariable Long id, @RequestBody ProductEntity productDetails) {
+  public ResponseEntity<ApiResponse<ProductEntity>> updateProduct(@PathVariable Long id, @RequestBody ProductRequest product) {
     try {
+      ProductEntity productDetails = productMapper.requestToEntity(product);
       ProductEntity updatedProduct = productService.updateProduct(id, productDetails);
       return ResponseEntity.ok(new ApiResponse<>("Product updated successfully", updatedProduct, true));
     } catch (EntityNotFoundException e) {

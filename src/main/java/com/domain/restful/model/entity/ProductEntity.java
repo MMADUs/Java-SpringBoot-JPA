@@ -2,8 +2,18 @@ package com.domain.restful.model.entity;
 
 import java.math.BigDecimal;
 
+import com.domain.restful.model.views.View;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonView;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -13,7 +23,6 @@ import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name = "product")
@@ -42,6 +51,12 @@ public class ProductEntity {
 
   @ManyToOne
   @JoinColumn(name = "category_id")
-  @JsonBackReference
   private CategoryEntity category;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "merchant_id")
+  // @JsonBackReference
+  // @JsonIgnoreProperties("products")
+  @JsonView(View.ProductView.class)
+  private MerchantEntity merchant;
 }
