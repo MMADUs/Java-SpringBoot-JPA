@@ -1,6 +1,7 @@
 package com.domain.restful.usecase.util;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -19,8 +21,11 @@ public class JwtService {
     @Value("${jwt.secret}")
     private String jwtSecret;
 
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
+    @Value("${jwt.refreshExpiration}")
+    private long jwtRefreshExpiration;
+
+    @Value("${jwt.accessExpiration}")
+    private long jwtAccessExpiration;
 
     public String generateAccessToken(String username, Map<String, String> payloads) {
         return Jwts
@@ -28,7 +33,7 @@ public class JwtService {
                 .setClaims(payloads)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtAccessExpiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -39,22 +44,40 @@ public class JwtService {
                 .setClaims(payloads)
                 .setSubject(username)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + jwtExpiration))
+                .setExpiration(new Date(System.currentTimeMillis() + jwtRefreshExpiration))
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String extractedSubject = extractSubject(token);
-        return (extractedSubject.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (extractedSubject != null && extractedSubject.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 
     public String extractSubject(String token) {
+        boolean expired = isTokenExpired(token);
+        if (expired) {
+            return null;
+        }
+
         return extractClaim(token, Claims::getSubject);
     }
 
     public Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public Map<String, String> extractPayload(String token) {
+        boolean expired = isTokenExpired(token);
+        if (expired) {
+            return null;
+        }
+
+        final Claims claims = extractAllClaims(token);
+        Map<String, String> payloads = new HashMap<>();
+        payloads.put("user_id", claims.get("user_id", String.class));
+
+        return payloads;
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -63,7 +86,11 @@ public class JwtService {
     }
 
     private Boolean isTokenExpired(String token) {
-        return extractExpiration(token).before(new Date());
+        try {
+            return extractExpiration(token).before(new Date());
+        } catch (ExpiredJwtException e) {
+            return true;
+        }
     }
 
     private Claims extractAllClaims(String token) {

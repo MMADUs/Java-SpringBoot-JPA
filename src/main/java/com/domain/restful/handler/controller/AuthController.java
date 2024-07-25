@@ -11,7 +11,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,9 +29,6 @@ public class AuthController {
         this.authService = authService;
         this.authMapper = authMapper;
     }
-
-    @Value("${jwt.expiration}")
-    private long jwtExpiration;
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<AuthEntity>>> getAllUser() {
@@ -84,13 +80,11 @@ public class AuthController {
         Cookie access = new Cookie("access", tokens.get("access_token"));
         access.setHttpOnly(true);
         access.setSecure(true);
-        access.setMaxAge((int) (jwtExpiration / 1000));
         access.setPath("/");
 
         Cookie refresh = new Cookie("refresh", tokens.get("refresh_token"));
         refresh.setHttpOnly(true);
         refresh.setSecure(true);
-        refresh.setMaxAge((int) (jwtExpiration / 1000));
         refresh.setPath("/");
 
         System.out.println(tokens.get("access_token"));

@@ -1,6 +1,6 @@
 package com.domain.restful.handler.types.request;
 
-import com.domain.restful.handler.auth.Permission;
+import com.domain.restful.handler.auth.Roles;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,5 +22,5 @@ public class AuthRequest {
     @Size(min = 5, max = 30, message = "Email must be between 5 and 30 characters")
     private String email;
 
-    private Permission role;
+    private Roles role;
 }

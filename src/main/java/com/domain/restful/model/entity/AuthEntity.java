@@ -1,6 +1,6 @@
 package com.domain.restful.model.entity;
 
-import com.domain.restful.handler.auth.Permission;
+import com.domain.restful.handler.auth.Roles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -32,7 +32,7 @@ public class AuthEntity implements UserDetails {
     private String email;
 
     @Enumerated(value = EnumType.STRING)
-    private Permission role;
+    private Roles role;
 
     @Column
     private String refreshToken;
