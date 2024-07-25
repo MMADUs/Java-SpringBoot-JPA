@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.domain.restful.handler.types.request.CategoryRequest;
-import com.domain.restful.handler.types.response.ApiResponse;
+import com.domain.restful.handler.types.response.http.ApiResponse;
 import com.domain.restful.model.entity.CategoryEntity;
 import com.domain.restful.model.mapper.CategoryMapper;
 import com.domain.restful.usecase.service.CategoryService;

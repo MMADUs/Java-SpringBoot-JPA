@@ -1,15 +1,14 @@
-package com.domain.restful.handler.types.response;
+package com.domain.restful.handler.types.response.http;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ErrorResponse {
+public class ApiResponse<T> {
   private String message;
-  private List<String> errors;
+  private T data;
+  private boolean success;
 }

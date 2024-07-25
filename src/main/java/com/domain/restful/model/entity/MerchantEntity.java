@@ -3,7 +3,6 @@ package com.domain.restful.model.entity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -18,17 +17,6 @@ import lombok.ToString;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import com.domain.restful.model.views.View;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.JsonView;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-// import com.fasterxml.jackson.annotation.JsonBackReference;
-// import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "merchant")
@@ -50,8 +38,6 @@ public class MerchantEntity {
   @OneToMany(mappedBy = "merchant", cascade = CascadeType.ALL, orphanRemoval = true)
   @EqualsAndHashCode.Exclude
   @ToString.Exclude
-  // @JsonManagedReference
-  @JsonView(View.MerchantView.class)
   final Set<ProductEntity> products = new HashSet<>();
 
   public void addProduct(ProductEntity product) {

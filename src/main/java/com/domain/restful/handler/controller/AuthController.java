@@ -2,7 +2,7 @@ package com.domain.restful.handler.controller;
 
 import com.domain.restful.handler.types.request.AuthRequest;
 import com.domain.restful.handler.types.request.LoginRequest;
-import com.domain.restful.handler.types.response.ApiResponse;
+import com.domain.restful.handler.types.response.http.ApiResponse;
 import com.domain.restful.model.entity.AuthEntity;
 import com.domain.restful.model.mapper.AuthMapper;
 import com.domain.restful.usecase.service.AuthService;

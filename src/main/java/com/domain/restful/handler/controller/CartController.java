@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.domain.restful.handler.types.request.CartRequest;
-import com.domain.restful.handler.types.response.ApiResponse;
+import com.domain.restful.handler.types.response.http.ApiResponse;
 import com.domain.restful.model.entity.CartEntity;
 import com.domain.restful.model.mapper.CartMapper;
 import com.domain.restful.usecase.service.CartService;

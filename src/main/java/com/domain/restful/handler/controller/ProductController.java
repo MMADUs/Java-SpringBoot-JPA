@@ -1,12 +1,14 @@
 package com.domain.restful.handler.controller;
 
 import com.domain.restful.handler.types.request.ProductRequest;
-import com.domain.restful.handler.types.response.ApiResponse;
+import com.domain.restful.handler.types.response.http.ApiResponse;
+import com.domain.restful.handler.types.response.json.entity.ProductResponse;
 import com.domain.restful.model.entity.ProductEntity;
 import com.domain.restful.model.mapper.ProductMapper;
 import com.domain.restful.usecase.service.ProductService;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,25 +21,29 @@ import java.util.List;
 @RestController
 @RequestMapping("/product")
 public class ProductController {
+  private final ProductService productService;
+  private final ProductMapper productMapper;
 
-  @Autowired
-  private ProductService productService;
-
-  @Autowired
-  private ProductMapper productMapper;
+  ProductController(ProductService productService, ProductMapper productMapper) {
+    this.productService = productService;
+    this.productMapper = productMapper;
+  }
 
   @GetMapping
-  public ResponseEntity<ApiResponse<List<ProductEntity>>> getAllProducts() {
+  public ResponseEntity<ApiResponse<List<ProductResponse>>> getAllProducts(HttpServletRequest request) {
+    String userId = (String) request.getAttribute("user_id");
+    System.out.println("this is user id: " + userId);
     List<ProductEntity> products = productService.getAllProducts();
-    System.out.println(products);
-    return ResponseEntity.ok(new ApiResponse<>("Products retrieved successfully", products, true));
+    List<ProductResponse> productResponses = productMapper.entityListToResponseList(products);
+    return ResponseEntity.ok(new ApiResponse<>("Products retrieved successfully", productResponses, true));
   }
 
   @GetMapping("/{id}")
-  public ResponseEntity<ApiResponse<ProductEntity>> getProductById(@PathVariable Long id) {
+  public ResponseEntity<ApiResponse<ProductResponse>> getProductById(@PathVariable Long id) {
     try {
       ProductEntity product = productService.getProductById(id);
-      return ResponseEntity.ok(new ApiResponse<>("Product found", product, true));
+      ProductResponse productResponse = productMapper.entityToResponse(product);
+      return ResponseEntity.ok(new ApiResponse<>("Product found", productResponse, true));
     } catch (EntityNotFoundException e) {
       return ResponseEntity.status(HttpStatus.NOT_FOUND)
           .body(new ApiResponse<>(e.getMessage(), null, false));

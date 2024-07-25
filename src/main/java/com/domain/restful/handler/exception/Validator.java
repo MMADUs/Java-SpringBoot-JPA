@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-import com.domain.restful.handler.types.response.ErrorResponse;
+import com.domain.restful.handler.types.response.http.ErrorResponse;
 
 import java.util.List;
 import java.util.stream.Collectors;

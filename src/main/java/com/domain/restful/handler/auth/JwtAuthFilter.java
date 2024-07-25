@@ -56,32 +56,38 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         if (SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userImplementation.loadUserByUsername(username);
 
+            Map<String, String> accessTokenPayload = jwtService.extractPayload(refreshToken);
+            if (accessTokenPayload == null) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+
             if (jwtService.validateToken(accessToken, userDetails)) {
-                grantAccess(request, userDetails);
+                grantAccess(request, userDetails, accessTokenPayload.get("user_id"));
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            Map<String, String> payload = jwtService.extractPayload(refreshToken);
-            if (payload == null) {
+            Map<String, String> refreshTokenPayload = jwtService.extractPayload(refreshToken);
+            if (refreshTokenPayload == null) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
-            Optional<AuthEntity> userLookup = authRepository.findById(Long.parseLong(payload.get("user_id")));
+            Optional<AuthEntity> userLookup = authRepository.findById(Long.parseLong(refreshTokenPayload.get("user_id")));
             if (userLookup.isEmpty()) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
             AuthEntity userData = userLookup.get();
-            if (userData.getRefreshToken() == null) {
+            if (userData.getRefreshToken() == null || !userData.getRefreshToken().equals(refreshToken)) {
                 filterChain.doFilter(request, response);
                 return;
             }
 
             if (jwtService.validateToken(userData.getRefreshToken(), userDetails)) {
-                grantAccess(request, userDetails);
+                grantAccess(request, userDetails, refreshTokenPayload.get("user_id"));
 
                 Map<String, String> newPayload = new HashMap<>();
                 newPayload.put("user_id", userData.getId().toString());
@@ -97,12 +103,13 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private void grantAccess (HttpServletRequest request, UserDetails userDetails) {
+    private void grantAccess (HttpServletRequest request, UserDetails userDetails, String id) {
         UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                 userDetails, null, userDetails.getAuthorities()
         );
         authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
         SecurityContextHolder.getContext().setAuthentication(authToken);
+        request.setAttribute("user_id", id);
     }
 
     private String getSubject(String accessToken, String refreshToken) {
